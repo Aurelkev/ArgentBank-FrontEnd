@@ -1,5 +1,5 @@
 import Account from "../../components/Account/Account";
-import "./User.css";
+import "./Profile.css";
 
 const accounts = [
   {

@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
-import SignIn from "./pages/SignIn/SignIn";
+import Login from "./pages/Login/Login";
 import Layout from "./components/Layout/Layout";
-import User from "./pages/User/User";
+import Profile from "./pages/Profile/Profile";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "./App.css";
 
@@ -14,8 +14,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<App />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/user" element={<User />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>
