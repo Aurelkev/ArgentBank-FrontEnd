@@ -1,35 +1,48 @@
+import { useEffect, useState } from "react";
 import Account from "../../components/Account/Account";
 import "./Profile.css";
+import accounts from "../../data/accountsData.jsx";
 
-const accounts = [
-  {
-    id: 1,
-    title: "Argent Bank Checking (x8349)",
-    amount: "$2,082.79",
-    description: "Available Balance",
-  },
-  {
-    id: 2,
-    title: "Argent Bank Savings (x6712)",
-    amount: "$10,928.42",
-    description: "Available Balance",
-  },
-  {
-    id: 3,
-    title: "Argent Bank Credit Card (x8349)",
-    amount: "$184.30",
-    description: "Current Balance",
-  },
-];
 
 function User() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setFirstName(data.body.firstName);
+          setLastName(data.body.lastName);
+        } else {
+          console.error("Erreur:", data.message);
+        }
+      } catch (error) {
+        console.error("Erreur réseau:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
   return (
     <div className="main bg-dark">
       <div className="header">
         <h1>
           Welcome back
           <br />
-          Tony Jarvis!
+          {firstName} {lastName} !
         </h1>
         <button className="edit-button">Edit Name</button>
       </div>
