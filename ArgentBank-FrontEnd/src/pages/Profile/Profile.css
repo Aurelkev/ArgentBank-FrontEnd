@@ -1,4 +1,10 @@
+h1 {
+  color: white;
+}
 
+.header {
+  margin-bottom: 3vh;
+}
 .sr-only {
   border: 0 !important;
   clip: rect(1px, 1px, 1px, 1px) !important;
@@ -13,10 +19,19 @@
   white-space: nowrap !important;
 }
 
-/* Header */
-.header {
-  color: #fff;
-  margin-bottom: 2rem;
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+}
+.edit-form h2 {
+  color: white;
+}
+
+.edit-form label {
+  color: white;
 }
 
 .edit-button {
@@ -24,5 +39,11 @@
   background-color: #00bc77;
   color: #fff;
   font-weight: bold;
-  padding: 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
 }
