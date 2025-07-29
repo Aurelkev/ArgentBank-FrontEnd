@@ -1,9 +1,8 @@
-h1 {
-  color: white;
-}
-
 .header {
   margin-bottom: 3vh;
+}
+h2 {
+  color: white;
 }
 .sr-only {
   border: 0 !important;
@@ -17,33 +16,4 @@ h1 {
   position: absolute !important;
   width: 1px !important;
   white-space: nowrap !important;
-}
-
-.edit-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 50%;
-  margin: 0 auto;
-}
-.edit-form h2 {
-  color: white;
-}
-
-.edit-form label {
-  color: white;
-}
-
-.edit-button {
-  border-color: #00bc77;
-  background-color: #00bc77;
-  color: #fff;
-  font-weight: bold;
-  padding: 10px 30px;
-  border-radius: 5px;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
 }

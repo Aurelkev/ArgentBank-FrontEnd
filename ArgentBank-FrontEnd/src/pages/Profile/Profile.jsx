@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Account from "../../components/Account/Account";
-import "./Profile.css";
 import accounts from "../../data/accountsData";
+import EditProfileForm from "../../components/EditProfileForm/EditProfileForm";
+import "./Profile.css";
 
 function User() {
   const [firstName, setFirstName] = useState("");
@@ -14,12 +15,15 @@ function User() {
       const token = localStorage.getItem("token");
 
       try {
-        const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3001/api/v1/user/profile",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -42,14 +46,17 @@ function User() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://localhost:3001/api/v1/user/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ userName }),
-      });
+      const response = await fetch(
+        "http://localhost:3001/api/v1/user/profile",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ userName }),
+        }
+      );
 
       const data = await response.json();
 
@@ -73,44 +80,21 @@ function User() {
     <div className="main bg-dark">
       <div className="header">
         {editMode ? (
-          <div className="edit-form">
-            <h2>Edit user info</h2>
-
-            <div className="input-wrapper">
-              <label>User name:</label>
-              <input
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-            </div>
-
-            <div className="input-wrapper">
-              <label>First name:</label>
-              <input type="text" value={firstName} disabled />
-            </div>
-
-            <div className="input-wrapper">
-              <label>Last name:</label>
-              <input type="text" value={lastName} disabled />
-            </div>
-
-            <div className="button-group">
-              <button className="edit-button" onClick={handleSave}>
-                Save
-              </button>
-              <button className="edit-button cancel" onClick={handleCancel}>
-                Cancel
-              </button>
-            </div>
-          </div>
+          <EditProfileForm
+            firstName={firstName}
+            lastName={lastName}
+            userName={userName}
+            setUserName={setUserName}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
         ) : (
           <>
-            <h1>
+            <h2>
               Welcome back
               <br />
               {firstName} {lastName}!
-            </h1>
+            </h2>
             <button className="edit-button" onClick={() => setEditMode(true)}>
               Edit Name
             </button>
