@@ -1,35 +1,38 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUserName, setUser } from "../../redux/userSlice";
+
 import Account from "../../components/Account/Account";
-import accounts from "../../data/accountsData";
 import EditProfileForm from "../../components/EditProfileForm/EditProfileForm";
+import accounts from "../../data/accountsData";
+
 import "./Profile.css";
 
 function User() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
+  const dispatch = useDispatch();
+  const { firstName, lastName, userName: storedUserName, token } = useSelector(
+    (state) => state.user
+  );
+
   const [editMode, setEditMode] = useState(false);
+  const [userName, setUserName] = useState(storedUserName || "");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const token = localStorage.getItem("token");
+      if (!token) return;
 
       try {
-        const response = await fetch(
-          "http://localhost:3001/api/v1/user/profile",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const data = await response.json();
 
         if (response.ok) {
-          setFirstName(data.body.firstName);
-          setLastName(data.body.lastName);
+          dispatch(setUser({ ...data.body, token }));
           setUserName(data.body.userName);
         } else {
           console.error("Erreur API:", data.message);
@@ -39,28 +42,26 @@ function User() {
       }
     };
 
-    fetchUserProfile();
-  }, []);
+    if (!firstName) {
+      fetchUserProfile();
+    }
+  }, [dispatch, token, firstName]);
 
   const handleSave = async () => {
-    const token = localStorage.getItem("token");
-
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/v1/user/profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ userName }),
-        }
-      );
+      const response = await fetch("http://localhost:3001/api/v1/user/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userName }),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
+        dispatch(updateUserName(userName));
         alert("Nom d’utilisateur mis à jour !");
         setEditMode(false);
       } else {
@@ -73,6 +74,7 @@ function User() {
   };
 
   const handleCancel = () => {
+    setUserName(storedUserName);
     setEditMode(false);
   };
 

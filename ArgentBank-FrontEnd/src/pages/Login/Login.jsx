@@ -1,10 +1,16 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setUser } from '../../redux/userSlice';
 import './Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +28,27 @@ function Login() {
       if (response.ok) {
         const token = data.body.token;
         localStorage.setItem('token', token);
-        window.location.href = '/profile';
+
+        const profileRes = await fetch('http://localhost:3001/api/v1/user/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const profileData = await profileRes.json();
+
+        if (profileRes.ok) {
+          dispatch(setUser({
+            ...profileData.body,
+            token,
+          }));
+          navigate('/profile');
+        } else {
+          setError(profileData.message || 'Impossible de charger le profil');
+        }
       } else {
-        setError(data.message || 'Une erreur est survenue');
+        setError(data.message || 'Email ou mot de passe incorrect');
       }
     } catch (err) {
       console.error(err);
