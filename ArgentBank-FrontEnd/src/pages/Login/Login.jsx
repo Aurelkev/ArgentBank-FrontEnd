@@ -1,25 +1,26 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { setUser } from '../../redux/userSlice';
-import './Login.css';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setUser } from "../../redux/userSlice";
+import "./Login.css";
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('http://localhost:3001/api/v1/user/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://localhost:3001/api/v1/user/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -27,32 +28,41 @@ function Login() {
 
       if (response.ok) {
         const token = data.body.token;
-        localStorage.setItem('token', token);
+        if (rememberMe) {
+          localStorage.setItem("token", token);
+        } else {
+          sessionStorage.setItem("token", token);
+        }
 
-        const profileRes = await fetch('http://localhost:3001/api/v1/user/profile', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const profileRes = await fetch(
+          "http://localhost:3001/api/v1/user/profile",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const profileData = await profileRes.json();
 
         if (profileRes.ok) {
-          dispatch(setUser({
-            ...profileData.body,
-            token,
-          }));
-          navigate('/profile');
+          dispatch(
+            setUser({
+              ...profileData.body,
+              token,
+            })
+          );
+          navigate("/profile");
         } else {
-          setError(profileData.message || 'Impossible de charger le profil');
+          setError(profileData.message || "Impossible de charger le profil");
         }
       } else {
-        setError(data.message || 'Email ou mot de passe incorrect');
+        setError(data.message || "Email ou mot de passe incorrect");
       }
     } catch (err) {
       console.error(err);
-      setError('Erreur serveur ou réseau');
+      setError("Erreur serveur ou réseau");
     }
   };
 
@@ -83,10 +93,10 @@ function Login() {
             />
           </div>
           <div className="input-remember">
-            <input type="checkbox" id="remember-me" />
+            <input type="checkbox" id="remember-me" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}/>
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit" className="sign-in-button">
             Sign In
           </button>
