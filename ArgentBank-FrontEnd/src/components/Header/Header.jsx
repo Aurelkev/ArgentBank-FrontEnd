@@ -1,23 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import './Header.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../redux/userSlice';
 
 function Header() {
+  const { userName, token } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-  }, []);
 
   const handleLogout = () => {
+    dispatch(logout());
     localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    navigate('/login');
-  };
-
-  const handleLogin = () => {
     navigate('/login');
   };
 
@@ -33,12 +26,23 @@ function Header() {
       </a>
 
       <div>
-        {isLoggedIn ? (
-          <button onClick={handleLogout} className="main-nav-item nav-button">
-            <i className="fa fa-sign-out"></i> Logout
-          </button>
+        {token ? (
+          <>
+            <span className="main-nav-item nav-button">
+              <i className="fa fa-user-circle"></i> {userName}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="main-nav-item nav-button"
+            >
+              <i className="fa fa-sign-out"></i> Logout
+            </button>
+          </>
         ) : (
-          <button onClick={handleLogin} className="main-nav-item nav-button">
+          <button
+            onClick={() => navigate('/login')}
+            className="main-nav-item nav-button"
+          >
             <i className="fa fa-user-circle"></i> Sign In
           </button>
         )}
