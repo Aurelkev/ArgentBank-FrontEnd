@@ -96,7 +96,7 @@ function Login() {
             <input type="checkbox" id="remember-me" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}/>
             <label htmlFor="remember-me">Remember me</label>
           </div>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="error">{error}</p>}
           <button type="submit" className="sign-in-button">
             Sign In
           </button>

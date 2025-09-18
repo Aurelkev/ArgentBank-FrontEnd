@@ -52,3 +52,9 @@
 .sign-in-button:hover {
   opacity: 0.9;
 }
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
